@@ -22,23 +22,30 @@
 </div>
 
 <script>
-  $(document).ready(function () {
-    $('#flipbook').turn({
-      width: 800,
-      height: 500,
-      autoCenter: true
-    });
-
-    // Responsividade: desativa o efeito em telas pequenas
-    function checkScreenSize() {
-      if (window.innerWidth < 768) {
-        $('#flipbook').turn('destroy').css({ width: '100%', height: 'auto' });
-        $('.page').css({ display: 'block' });
+  function initFlipbook() {
+    if (window.innerWidth >= 768) {
+      if (!$('#flipbook').data('turn')) {
+        $('#flipbook').turn({
+          width: Math.min(800, window.innerWidth * 0.95),
+          height: Math.min(500, window.innerHeight * 0.8),
+          autoCenter: true
+        });
+        $('.page').css({ display: '' });
       }
+    } else {
+      if ($('#flipbook').data('turn')) {
+        $('#flipbook').turn('destroy');
+      }
+      $('#flipbook').css({ width: '100%', height: 'auto' });
+      $('.page').css({ display: 'block' });
     }
+  }
 
-    checkScreenSize();
-    $(window).resize(checkScreenSize);
+  $(document).ready(function () {
+    initFlipbook();
+    $(window).resize(function () {
+      initFlipbook();
+    });
   });
 </script>
 
